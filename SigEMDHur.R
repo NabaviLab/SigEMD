@@ -10,7 +10,7 @@ EMDomics <- function(data, outcomes, emd, emd.perm, pairwise.emd.table, pairwise
 calculate_emd_hur <- function(data, outcomes, binSize=0.2,
                           nperm=100, pairwise.p=FALSE, seq=FALSE,
                           quantile.norm=FALSE,
-                          verbose=TRUE, parallel=TRUE) {
+                          verbose=TRUE, parallel=FALSE) {
   
   bpparam <- BiocParallel::bpparam()
   
