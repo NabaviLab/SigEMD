@@ -1,3 +1,27 @@
+databin<- function(dat){
+  databinary<- dat
+  databinary[databinary>0] <- 1
+  databinary[databinary<0] <- 0
+  return(databinary)
+}
+
+idfyImpgene <- function(data,databinary,condition,thres=0.05){
+
+  
+  beta_glm <- bayeswald(databinary,condition)
+  genes_fit <- rownames(beta_glm)[beta_glm[,"chi-test"]< thres]
+  
+ # genes_fit<- genes_fit[! (genes_fit %in% rownames(databinary[rowSums(databinary)<2 ,]))]
+  return(genes_fit)
+}
+
+idfyUsegene <- function(data,databinary,condition,ratio=0.8){
+
+  genes_use<-rownames(databinary[rowSums(databinary)>=(ncol(data)*ratio), ])
+  #genes_use<- genes_use[!genes_use %in% genes_fit]
+  return(genes_use)
+}
+
 FunImpute <- function(
   object,
   genes_use = NULL,
@@ -28,7 +52,7 @@ FunImpute <- function(
       
     },t(tsg)
   )
-  
+  colnames(corgene)<-genes_fit
   corgene<- rbind(colnames(corgene),corgene)
  
   lasso_fits<- sapply(data.frame(corgene), FUN = function(x,tsip,tsg){
@@ -56,13 +80,14 @@ FunImpute <- function(
     }, lasso_input,lasso_fituse,gene_loc)
     
   }, tsip,tsg)
-  
+  names(lasso_fits)<- colnames(corgene)
   
   imputedobj<- object
   for (i in 1:length(lasso_fits)){
     imputedobj[names(lasso_fits)[i], which(imputedobj[names(lasso_fits)[i] ,] ==0)] <- lasso_fits[[i]]
   }
-  return(imputedobj)
+  imputedobj[imputedobj<0] <- 0
+  return(list(alldat =imputedobj,fitHur=lasso_fits))
 }
 
 lasso.fxn <- function(

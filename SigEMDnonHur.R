@@ -12,7 +12,7 @@ EMD_sigall <- function(emdall,Hur_gene,nonHur_gene, Hur, nonHur) {
   
 }
 
-calculate_single<- function(data, condition, binSize=0.2, nperm){
+calculate_single<- function(data=data, condition=condition,Hur_gene=Hur_gene, binSize=0.2, nperm){
   
  require(arm)
   require(aod)
@@ -22,10 +22,11 @@ calculate_single<- function(data, condition, binSize=0.2, nperm){
   databinary<- data
   databinary[databinary>0] <- 1
   
-  beta_glm <- bayeswald(databinary,condition)
-
-  
-  Hur_gene <- rownames(beta_glm)[beta_glm[,"chi-test"]<0.05]
+  if(is.null(Hur_gene)){
+    beta_glm <- bayeswald(databinary,condition)
+    
+    Hur_gene <- rownames(beta_glm)[beta_glm[,"chi-test"]<0.05]
+  }
  
   nonHur_gene <- setdiff(rownames(databinary),(Hur_gene))
   if(length(Hur_gene)!=0){
