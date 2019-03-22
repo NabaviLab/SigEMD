@@ -5,6 +5,13 @@ databin<- function(dat){
   return(databinary)
 }
 
+dataclean <- function(dat){
+  message("Remove genes that all are zeros...")
+  dat <- dat[rowSums(dat)!=0,]
+  message("done")
+  return(dat)
+}
+
 idfyImpgene <- function(data,databinary,condition,thres=0.05){
 
   
