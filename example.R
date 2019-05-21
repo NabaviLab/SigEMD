@@ -18,6 +18,7 @@ source("plot_sig.R")
 load("exampleData.RData")
 data <- dataclean(data)
 databinary<- databin(data)
+names(condition) <- colnames(data)
 
 ############################# Imputation #############################
 ## Imputation can be chosen by the user. It is not a necessary step in SigEMD, but we suggest to impute the missing zero values.
