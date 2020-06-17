@@ -18,6 +18,8 @@ calculate_single<- function(data=data, condition=condition,Hur_gene=Hur_gene, bi
   require(aod)
   require(fdrtool)
   
+  names(condition) <- colnames(data)
+  
   data<-as.matrix(data)
   databinary<- data
   databinary[databinary>0] <- 1
